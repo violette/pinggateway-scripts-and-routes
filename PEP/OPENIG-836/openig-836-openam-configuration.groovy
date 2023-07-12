@@ -9,7 +9,7 @@ import groovyx.net.http.*
 // -----------------------------------------------------------------------------------------------------
 // This script is used to configure your OPENAM according to OPENIG-836
 // https://bugster.forgerock.org/jira/browse/OPENIG-836
-// # tested with AM-5.5.0
+// # tested with AM-6.5.0
 // -----------------------------------------------------------------------------------------------------
 // CONFIGURATION (Update it if necessary)
 // -----------------------------------------------------------------------------------------------------
@@ -48,6 +48,7 @@ http = new HTTPBuilder("${openamUrl}/json/authenticate")
 http.request(POST,JSON) { req ->
     headers.'X-OpenAM-Username' = user
     headers.'X-OpenAM-Password' = userpass
+    headers.'Accept-Api-Version' = 'resource=2.1'
     headers.'Content-Type' = 'application/json'
     requestContentType = ContentType.JSON
     body = ''
@@ -67,6 +68,7 @@ http = new HTTPBuilder("${openamUrl}/json/applications/?_action=create")
 http.request(POST, JSON) { req ->
     headers.'iPlanetDirectoryPro' = SSOToken
     headers.'Content-Type' = 'application/json'
+    headers.'Accept-Api-Version' = 'resource=2.1'
     requestContentType = ContentType.JSON
     body = """{
                 "name": "${applicationName}",
@@ -133,6 +135,7 @@ def scriptId
 http = new HTTPBuilder("${openamUrl}/json/scripts?_queryFilter=name%20eq%20%22${applicationName}-script%22")
 http.request(GET, JSON) { req ->
     headers.'iPlanetDirectoryPro' = SSOToken
+    headers.'Accept-Api-Version' = 'resource=2.1'
     headers.'Content-Type' = 'application/json'
 
     response.success = { resp, json ->
@@ -172,6 +175,7 @@ if(scriptId == null) {
     http = new HTTPBuilder("${openamUrl}/json/scripts/?_action=create")
     http.request(POST, JSON) { req ->
         headers.'iPlanetDirectoryPro' = SSOToken
+        headers.'Accept-Api-Version' = 'resource=2.1'
         headers.'Content-Type' = 'application/json'
         requestContentType = ContentType.JSON
         body = """{
@@ -196,6 +200,7 @@ if(scriptId == null) {
 http = new HTTPBuilder("${openamUrl}/json/policies?_action=create")
 http.request(POST, JSON) { req ->
     headers.'iPlanetDirectoryPro' = SSOToken
+    headers.'Accept-Api-Version' = 'resource=2.1'
     headers.'Content-Type' = 'application/json'
     requestContentType = ContentType.JSON
     body = """{
