@@ -1,0 +1,185 @@
+{
+  "name": "AI Agent Detection - PingOne Protect",
+  "comment": "AI agent detection is delivered through the Bot Detection predictor of PingOne Protect (type BOT), which requires the PingOne Protect license and the PingOne Signals (Protect) SDK. In addition to the PingOne-side prerequisites, AI agent type detection requires Signals SDK version 5.6.10 or later with the isIAFDetectionEnabled and agentIdentification opt-in flags set to true: both are PingOne/SDK-side prerequisites, not PingGateway attributes. PingGateway reacts at risk-level granularity only: the evaluation response's details.botDetection attributes (level, type, reason, detected.rule.id) and the result.recommendedAction BOT_MITIGATION value are consumed by the PingOne risk policy, which produces the risk level routed by this route.",
+  "baseURI": "https://app.example.com:8444/login",
+  "condition": "${find(request.uri.path, '^/home/cdsso')}",
+  "properties": {
+    "amRealm": "/alpha",
+    "clientId": "<applicationClientId>",
+    "policySetId": "<policySetId>",
+    "serviceEndpoint": "https://api.pingone.eu/v1/environments/<envId>",
+    "tenantHostname": "myTenant.forgeblocks.com",
+    "tokenEndpoint": "https://auth.pingone.eu/<envId>/as/token"
+  },
+  "heap": [
+    {
+      "name": "SystemAndEnvSecretStore-1",
+      "type": "SystemAndEnvSecretStore",
+      "comment": "Retrieves the PingOne worker application client secret from the environment: export the client secret base64-encoded as the CLIENT_SECRET_ID environment variable; this store exposes it under the secret id client.secret.id."
+    },
+    {
+      "name": "AmService-1",
+      "type": "AmService",
+      "config": {
+        "realm": "&{amRealm}",
+        "agent": {
+          "username": "ig_agent",
+          "passwordSecretId": "agent.secret.id"
+        },
+        "secretsProvider": "SystemAndEnvSecretStore-1",
+        "url": "https://&{tenantHostname}/am/"
+      }
+    },
+    {
+      "name": "ClientCredentialsOAuth2ClientFilter-1",
+      "type": "ClientCredentialsOAuth2ClientFilter",
+      "comment": "Obtains PingOne access tokens with the worker application client credentials (client credentials grant) for requests made through the PingOneService.",
+      "config": {
+        "tokenEndpoint": "&{tokenEndpoint}",
+        "scopes": [
+          "openid",
+          "profile",
+          "email",
+          "p1"
+        ],
+        "endpointHandler": {
+          "name": "AccessTokenHandler",
+          "type": "Chain",
+          "config": {
+            "filters": [
+              {
+                "type": "ClientSecretBasicAuthenticationFilter",
+                "config": {
+                  "clientId": "&{clientId}",
+                  "clientSecretId": "client.secret.id",
+                  "secretsProvider": "SystemAndEnvSecretStore-1"
+                }
+              }
+            ],
+            "handler": "ForgeRockClientHandler"
+          }
+        }
+      }
+    },
+    {
+      "name": "RiskEndpointHandler",
+      "type": "Chain",
+      "comment": "Endpoint handler used by the PingOneService to call the PingOne service endpoints with the worker application access token.",
+      "config": {
+        "filters": [
+          "ClientCredentialsOAuth2ClientFilter-1"
+        ],
+        "handler": "ForgeRockClientHandler"
+      }
+    },
+    {
+      "name": "PingOneService-1",
+      "type": "PingOneService",
+      "comment": "PingOne environment service endpoint; PingGateway derives the risk evaluation and feedback endpoints from it.",
+      "config": {
+        "serviceEndpoint": "&{serviceEndpoint}",
+        "endpointHandler": "RiskEndpointHandler"
+      }
+    },
+    {
+      "name": "StepUpHandler",
+      "type": "Chain",
+      "comment": "Step-up authorization for medium-risk requests; the feedback filter registers the success of the post-evaluation actions with PingOne Protect and resets the assumed risk level to low.",
+      "config": {
+        "filters": [
+          {
+            "name": "PolicyEnforcementFilter-1",
+            "type": "PolicyEnforcementFilter",
+            "config": {
+              "application": "PEP-CDSSO",
+              "ssoTokenSubject": "${contexts.cdsso.token}",
+              "amService": "AmService-1"
+            }
+          },
+          {
+            "name": "SuccessFeedbackFilter",
+            "type": "PingOneProtectFeedbackSuccessFilter",
+            "config": {
+              "pingOneService": "PingOneService-1",
+              "postEvaluationAssumedRiskLevel": "low"
+            }
+          }
+        ],
+        "handler": "ReverseProxyHandler"
+      }
+    },
+    {
+      "name": "FailureHandler",
+      "type": "Chain",
+      "comment": "Denies high-risk requests with HTTP 403; the feedback filter registers the failure of the post-evaluation actions with PingOne Protect.",
+      "config": {
+        "filters": [
+          {
+            "name": "FailureFeedbackFilter",
+            "type": "PingOneProtectFeedbackFailureFilter",
+            "config": {
+              "pingOneService": "PingOneService-1"
+            }
+          }
+        ],
+        "handler": {
+          "type": "StaticResponseHandler",
+          "config": {
+            "status": 403,
+            "headers": {
+              "Content-Type": [
+                "text/plain; charset=UTF-8"
+              ]
+            },
+            "entity": "HTTP 403 Forbidden"
+          }
+        }
+      }
+    }
+  ],
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "CrossDomainSingleSignOnFilter-1",
+          "type": "CrossDomainSingleSignOnFilter",
+          "comment": "CDSSO authentication against the AM instance; the authenticated user (subname claim) is passed to the PingOneProtectEvaluationFilter as the evaluation userId.",
+          "config": {
+            "redirectEndpoint": "/home/cdsso/redirect",
+            "authCookie": {
+              "path": "/home",
+              "name": "ig-token-cookie"
+            },
+            "amService": "AmService-1"
+          }
+        },
+        {
+          "name": "PingOneProtectEvaluationFilter-1",
+          "type": "PingOneProtectEvaluationFilter",
+          "comment": "Evaluates the session risk with PingOne Protect and records the risk level in the PingOneProtectEvaluationContext. The deviceProfile callbackEndpoint must match the route condition, and admin.json must set the connectors maxTotalHeadersSize to 32768 to avoid HTTP 431 errors caused by device profile cookies.",
+          "config": {
+            "pingOneService": "PingOneService-1",
+            "policySet": "&{policySetId}",
+            "userId": "${contexts.cdsso.claimsSet.getClaim('subname')}",
+            "nonEvaluatedUrls": "${find(request.uri.path, '/home/cdsso/redirect')}",
+            "deviceProfile": {
+              "callbackEndpoint": "/home/cdsso/profilecallback"
+            }
+          }
+        }
+      ],
+      "handler": {
+        "name": "PingOneProtectThreatLevelRoutingHandler-1",
+        "type": "PingOneProtectThreatLevelRoutingHandler",
+        "config": {
+          "levels": {
+            "low": "ReverseProxyHandler",
+            "medium": "StepUpHandler",
+            "high": "FailureHandler"
+          }
+        }
+      }
+    }
+  }
+}
