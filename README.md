@@ -27,7 +27,13 @@ An install of [**PingAM**](https://product-downloads.pingidentity.com/) is requi
 
 - [STS: transform OAuth2/OpenID to SAML assertions!](https://github.com/openig-contrib/script-util-for-openig/tree/master/STS/TokenTransformationFilter)
 
+- BOT detection - See examples :
+  - [AI agent detection groovy](https://github.com/openig-contrib/script-util-for-openig/tree/master/ai-agent-detection-groovy.json)
+  - [AI agent detection](https://github.com/openig-contrib/script-util-for-openig/tree/master/ai-agent-detection.json)
+  - [bot detection](https://github.com/openig-contrib/script-util-for-openig/tree/master/bot-detection.json) 
+- 
 > **Note: that PingGateway is now launched in PRODUCTION MODE by default**
+
 >
 > Don't forget to change it to DEVELOPMENT to access Studio or for editing routes.
 >
