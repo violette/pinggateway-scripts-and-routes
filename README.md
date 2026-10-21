@@ -1,4 +1,4 @@
-# PingGateway route examples!
+# PingGateway SCRIPTS / Routes / and other amazing examples!
 
 This repository contains short and simple routes ready to deploy for [**PingGateway**](https://product-downloads.pingidentity.com/browse/ig/featured)
 
