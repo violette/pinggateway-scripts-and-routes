@@ -6,31 +6,31 @@ An install of [**PingAM**](https://product-downloads.pingidentity.com/) is requi
 
 ## What does PingGateway do? What can I do with PingGateway?
 
-- [AWS: Deploy PingGateway with Amazon Web Services](https://github.com/openig-contrib/script-util-for-openig/tree/master/AWS-config-examples) _(scripts and utilities)_
-- [Docker Secrets and PingGateway Secrets](https://github.com/openig-contrib/script-util-for-openig/tree/master/docker)
+- [AWS: Deploy PingGateway with Amazon Web Services](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/AWS-config-examples) _(scripts and utilities)_
+- [Docker Secrets and PingGateway Secrets](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/docker)
 
-- [OAuth2: NASCAR page - Authenticate through PingAM, Google, MSN or LinkedIn](https://github.com/openig-contrib/script-util-for-openig/tree/master/OAuth2/OPENIG-712)
-- [OAuth2: Discovery](https://github.com/openig-contrib/script-util-for-openig/tree/master/OAuth2/OPENIG-712)
-- [OAuth2/OpenID: Authenticate through PingAM, check the token and get access to your protected application!](https://github.com/openig-contrib/script-util-for-openig/tree/master/OAuth2/OPENIG-933)
-- [OAuth2/OpenID: Authenticate using private_key_jwt](https://github.com/openig-contrib/script-util-for-openig/tree/master/OAuth2/private_key_jwt)
+- [OAuth2: NASCAR page - Authenticate through PingAM, Google, MSN or LinkedIn](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/OAuth2/OPENIG-712)
+- [OAuth2: Discovery](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/OAuth2/OPENIG-712)
+- [OAuth2/OpenID: Authenticate through PingAM, check the token and get access to your protected application!](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/OAuth2/OPENIG-933)
+- [OAuth2/OpenID: Authenticate using private_key_jwt](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/OAuth2/private_key_jwt)
 
-- [Policy Enforcement Filter(PEF): how to retrieve attributes in a policy decision](https://github.com/openig-contrib/script-util-for-openig/tree/master/PEP/OPENIG-824)
-- [Policy Enforcement Filter(PEF): how to set environment and retrieve advices in a policy decision](https://github.com/openig-contrib/script-util-for-openig/tree/master/PEP/OPENIG-836)
-- [Policy Enforcement Filter(PEF): configure PingAM as a PDP](https://github.com/openig-contrib/script-util-for-openig/tree/master/PEP/Setting_Up_OpenAM_As_A_PDP.groovy) _(groovy script only)_
+- [Policy Enforcement Filter(PEF): how to retrieve attributes in a policy decision](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/PEP/OPENIG-824)
+- [Policy Enforcement Filter(PEF): how to set environment and retrieve advices in a policy decision](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/PEP/OPENIG-836)
+- [Policy Enforcement Filter(PEF): configure PingAM as a PDP](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/PEP/Setting_Up_OpenAM_As_A_PDP.groovy) _(groovy script only)_
 
-- [UMA 1.0](https://github.com/openig-contrib/script-util-for-openig/tree/master/UMA) _(groovy script only)_
-- [UMA 2.0](https://github.com/openig-contrib/script-util-for-openig/tree/master/UMA) _(groovy script only)_
+- [UMA 1.0](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/UMA) _(groovy script only)_
+- [UMA 2.0](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/UMA) _(groovy script only)_
 
-- [JwtBuilderFilter(6.1): Passdown PingAM user information from PingGateway into a header](https://github.com/openig-contrib/script-util-for-openig/tree/master/Others/JwtBuilderFilter)
-- [Create a simple redirect route](https://github.com/openig-contrib/script-util-for-openig/tree/master/Others/Redirect)
-- [User Profile: Retrieve user information from PingAM](https://github.com/openig-contrib/script-util-for-openig/tree/master/Others/UserProfile)
+- [JwtBuilderFilter(6.1): Passdown PingAM user information from PingGateway into a header](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/Others/JwtBuilderFilter)
+- [Create a simple redirect route](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/Others/Redirect)
+- [User Profile: Retrieve user information from PingAM](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/Others/UserProfile)
 
-- [STS: transform OAuth2/OpenID to SAML assertions!](https://github.com/openig-contrib/script-util-for-openig/tree/master/STS/TokenTransformationFilter)
+- [STS: transform OAuth2/OpenID to SAML assertions!](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/STS/TokenTransformationFilter)
 
 - BOT detection - See examples :
-  - [AI agent detection groovy](https://github.com/openig-contrib/script-util-for-openig/tree/master/ai-agent-detection-groovy.json)
-  - [AI agent detection](https://github.com/openig-contrib/script-util-for-openig/tree/master/ai-agent-detection.json)
-  - [bot detection](https://github.com/openig-contrib/script-util-for-openig/tree/master/bot-detection.json) 
+  - [AI agent detection groovy](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/ai-agent-detection-groovy.json)
+  - [AI agent detection](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/ai-agent-detection.json)
+  - [bot detection](https://github.com/violette/pinggateway-scripts-and-routes/tree/master/bot-detection.json) 
 - 
 > **Note: that PingGateway is now launched in PRODUCTION MODE by default**
 
